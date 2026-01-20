@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 
 
@@ -10,9 +11,13 @@ const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+  const [error, setError] = useState('')
 
   const handleLogin = async(e) => {
     e.preventDefault();
+    setLoading(true)
+
     const userData = {
       username, password
     }
@@ -20,9 +25,15 @@ const Login = () => {
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/v1/token/', userData)
-      console.log(response.data)
+      localStorage.setItem('accessToken', response.data.access)
+      localStorage.setItem('refreshToken', response.data.refresh)
+      console.log('Login Successful')
+      navigate('/')
     } catch(error){
       console.error('Invalid Credentials')
+      setError("Invalid username or password")
+    } finally{
+      setLoading(false)
     }
     
   }
@@ -38,8 +49,9 @@ const Login = () => {
                 <input type="text" className='form-control' placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} />
               </div>
               <div className="mb-4">
-                <input type="password" className="form-control" placeholder='Enter Password' value={password} onChange={(e) => setPassword(e.target.value)}/>
+                <input type="password" className="form- " placeholder='Enter Password' value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
+              {error && <div className='text-danger'>{error}</div>}
               {loading ? (
                 <button type='submit' className='btn btn-info d-block mx-auto' disabled><FontAwesomeIcon icon={faSpinner} spin />Please Wait...</button>
               ) : (
