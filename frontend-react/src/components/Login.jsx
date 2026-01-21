@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../AuthProvider'
 
 
 
@@ -13,6 +14,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const [error, setError] = useState('')
+  const {isLoggedIn, setIsLoggedIn } = useContext(AuthContext)
 
   const handleLogin = async(e) => {
     e.preventDefault();
@@ -28,6 +30,7 @@ const Login = () => {
       localStorage.setItem('accessToken', response.data.access)
       localStorage.setItem('refreshToken', response.data.refresh)
       console.log('Login Successful')
+      setIsLoggedIn(true)
       navigate('/')
     } catch(error){
       console.error('Invalid Credentials')
@@ -49,7 +52,7 @@ const Login = () => {
                 <input type="text" className='form-control' placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} />
               </div>
               <div className="mb-4">
-                <input type="password" className="form- " placeholder='Enter Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input type="password" className="form-control " placeholder='Enter Password' value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
               {error && <div className='text-danger'>{error}</div>}
               {loading ? (
