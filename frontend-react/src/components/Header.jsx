@@ -9,8 +9,8 @@ const Header = () => {
   
   const handleLogout = (e) => {
 
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
     setIsLoggedIn(false)
     console.log('Logged out')
     navigate('/login')
@@ -24,7 +24,11 @@ const Header = () => {
             
             <div>
               {isLoggedIn? (
-                <button className='btn btn-danger' onClick={handleLogout}>Logout</button>
+                <>
+                  <Button class='btn btn-info' text="Dashboard" url="dashboard"/>
+                  &nbsp;
+                  <button className='btn btn-danger' onClick={handleLogout}>Logout</button>
+                </>
               ):(
                 <>
                   <Button text="Login" class="btn-outline-info" url="login"/>
