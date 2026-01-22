@@ -23,4 +23,32 @@ axiosInstance.interceptors.request.use(
     }
 )
 
+//Response Interceptorsto send refresh token to server and get new access token
+axiosInstance.interceptors.response.use(
+    function(response){
+        return response;
+    }, 
+    // handle failed responses
+    async function(error){
+        const originalRequest = error.config
+        if(error.response.status === 401 && !originalRequest.retry){
+            originalRequest.retry = true
+            const refreshToken = localStorage.getItem('refresh_token')
+            try{
+                const response = await axiosInstance.post('/token/refresh/', {refresh:refreshToken})
+                //console.log('accesstoken ===>>',response.data.access)
+                localStorage.setItem('access_token', response.data.access)
+                originalRequest.headers['Authorization'] = `Bearer ${response.data.access}`
+                return axiosInstance(originalRequest)
+            }catch(error){
+                localStorage.removeItem('access_token')
+                localStorage.removeItem('refresh_token')
+                
+            }
+        }
+        return Promise.reject(error);
+    }
+)
+
+
 export default axiosInstance
