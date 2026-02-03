@@ -9,6 +9,8 @@ const Dashboard = () => {
     const [error, setError] = useState()
     const [loading, setLoading] = useState(false)
     const [plot, setPlot] = useState()
+    const [ma100, setMa100] = useState()
+    const [ma200, setMa200] = useState()
 
     useEffect(() =>{
         const fetchProtectedData = async () =>{
@@ -29,9 +31,19 @@ const Dashboard = () => {
                 ticker : ticker
             })
             console.log(response.data)
+
             // set plot
             const backendRoot = import.meta.env.VITE_BACKEND_ROOT
             const plotURL = `${backendRoot}${response.data.plot_img}`
+            const ma100URL = `${backendRoot}${response.data.ma100_plot_img}`
+            const ma200URL = `${backendRoot}${response.data.ma200_plot_img}`
+            console.log('Plot URL:', plotURL)
+            setPlot(plotURL)
+            setMa100(ma100URL)
+            setMa200(ma200URL)
+            //setMa100Plot(plotURL)
+            
+
             if(response.data.error){
                 setError(response.data.error)
             }
@@ -44,7 +56,7 @@ const Dashboard = () => {
   return (
     <div className='container'>
         <div className='row'>
-            <div className="col-md-6 mx-auto bg-light-dark p-5 rounded">
+            <div className="col-md-6 mx-auto bg-light-dark px-5 py-5 rounded">
                 <h2 className='text-light mb-5'>Enter the Stock Ticker Here </h2>
                 <form onSubmit={handleSubmit}>
                     <input type="text" placeholder='Enter the Stock Ticker Here' className='form-control'
@@ -57,6 +69,27 @@ const Dashboard = () => {
                     </button>
                 </form>
             </div>
+
+            // Prediction Plot Display
+            <div className="prediction mt-5">
+                <div className="p-3">
+                    { plot && (
+                        <img src={plot} style={{maxWidth:'100%'}} />
+                        
+                    )}
+                </div>
+                <div className="p-3 mt-4">
+                    { ma100 && (
+                        <img src={ma100} style={{maxWidth:'100%'}} />
+                    )}
+                </div>
+                <div className="p-3 mt-4">
+                    { ma200 && (
+                        <img src={ma200} style={{maxWidth:'100%'}} />
+                    )}
+                </div>
+            </div>
+        
         </div>
     </div>
   )
