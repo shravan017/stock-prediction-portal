@@ -11,6 +11,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 from .utils import save_plot
+from sklearn.preprocessing import MinMaxScaler
+from keras.models import load_model
 
 
 class StockPredictionAPIView(APIView):
@@ -37,6 +39,7 @@ class StockPredictionAPIView(APIView):
             plt.title(f'Closing Price of {ticker}')
             plt.xlabel('Days')
             plt.ylabel('Close Price')
+            plt.grid(True)
             plt.legend()
             #save the plot to the file
             plot_img_path = f"{ticker}_plot.png" #plotted image path
@@ -51,6 +54,7 @@ class StockPredictionAPIView(APIView):
             plt.title(f'Closing Price of {ticker} with 100 days Moving Average')
             plt.xlabel('Days')
             plt.ylabel('Close Price')
+            plt.grid(True)
             plt.legend()
             #save the plot to the file
             ma100_plot_img_path = f'{ticker}_ma100_plot.png'
@@ -66,15 +70,77 @@ class StockPredictionAPIView(APIView):
             plt.title(f'Closing Price of {ticker} with 100 and 200 days Moving Averages')
             plt.xlabel('Days')
             plt.ylabel('Close Price')
+            plt.grid(True)
             plt.legend()
             #save the plot to the file
             ma200_plot_img_path = f'{ticker}_ma200_plot.png'
             ma200_plot_img = save_plot(ma200_plot_img_path)
+            
+            #splitting the data into training and testing sets
+            data_training = pd.DataFrame(df.Close[:int(len(df)*0.7)])
+            data_testing = pd.DataFrame(df.Close[int(len(df)*0.7):int(len(df))])
+            
+            #scaling data between 0 and 1
+            scaler = MinMaxScaler(feature_range=(0, 1))
+            
+            # Load ML model 
+            model = load_model('stock_predictor_model.keras')
+            
+            #preparing test data
+            past_100_data = data_training.tail(100)
+            final_df = pd.concat([past_100_data , data_testing], ignore_index=True)
+            input_data = scaler.fit_transform(final_df) # scaling btw 0 and 1
+            x_test = []
+            y_test = []
+            for i in range(100, input_data.shape[0]):
+                x_test.append(input_data[i-100 : i])
+                y_test.append(input_data[i, 0])
+            x_test, y_test = np.array(x_test), np.array(y_test)
+            
+            # making prediction
+            y_predicted = model.predict(x_test)
+            
+            #Inverse Transform(revert the scaled data into original data to see the difference)
+            y_predicted = scaler.inverse_transform(y_predicted.reshape(-1, 1)).flatten()
+            y_test = scaler.inverse_transform(y_test.reshape(-1, 1)).flatten()
+            
+            #plot final prediction plot
+            plt.switch_backend('AGG')
+            plt.figure(figsize=(12,5))
+            plt.plot(y_test, 'b', label = 'Original Price')
+            plt.plot(y_predicted, 'r', label = 'Predicted price')
+            plt.title(f"Final Prediction for the {ticker} ")
+            plt.xlabel('Days')
+            plt.ylabel('Price')
+            plt.grid(True)
+            plt.legend()
+            plot_img_path = f"{ticker}_final_prediction.png"
+            plot_final_prediction = save_plot(plot_img_path)
+            
+            # closer view of last 100 days
+            plt.switch_backend('AGG')
+            plt.figure(figsize=(12,6))
+            plt.plot(y_test, 'b', label = 'Original Price')
+            plt.plot(y_predicted, 'r', label = 'Predicted price')
+            plt.title('comparision')
+            plt.xlabel('Days')
+            plt.ylabel("Closing price")
+            plt.legend()
+            plt.grid(True)
+            plt.xlim(650, 800)
+            plt.ylim(160,260)
+            last100_plot_img_path = f"{ticker}_final_prediction_last_100_days.png"
+            last100_plot_img = save_plot(last100_plot_img_path)
+            
+            #Model Evolution
+            
             
             return Response({
                 'status':'Success',
                 'plot_img':plot_img,
                 'ma100_plot_img': ma100_plot_img,
                 'ma200_plot_img': ma200_plot_img,
+                'plot_final_prediction': plot_final_prediction,
+                'plot_final_prediction_last_100_days': last100_plot_img,
                 })
             
