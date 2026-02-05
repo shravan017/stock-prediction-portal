@@ -11,6 +11,8 @@ const Dashboard = () => {
     const [plot, setPlot] = useState()
     const [ma100, setMa100] = useState()
     const [ma200, setMa200] = useState()
+    const [finalPlot, setFinalPlot] = useState()
+    const [last100Plot, setLast100Plot] = useState()
 
     useEffect(() =>{
         const fetchProtectedData = async () =>{
@@ -37,11 +39,14 @@ const Dashboard = () => {
             const plotURL = `${backendRoot}${response.data.plot_img}`
             const ma100URL = `${backendRoot}${response.data.ma100_plot_img}`
             const ma200URL = `${backendRoot}${response.data.ma200_plot_img}`
+            const finalPlotURL = `${backendRoot}${response.data.plot_final_prediction}`
+            const last100PlotURL = `${backendRoot}${response.data.plot_final_prediction_last_100_days}`
             console.log('Plot URL:', plotURL)
             setPlot(plotURL)
             setMa100(ma100URL)
             setMa200(ma200URL)
-            //setMa100Plot(plotURL)
+            setFinalPlot(finalPlotURL)
+            setLast100Plot(last100PlotURL)
             
 
             if(response.data.error){
@@ -86,6 +91,16 @@ const Dashboard = () => {
                 <div className="p-3 mt-4">
                     { ma200 && (
                         <img src={ma200} style={{maxWidth:'100%'}} />
+                    )}
+                </div>
+                <div className="p-3 mt-4">
+                    { finalPlot && (
+                        <img src={finalPlot} style={{maxWidth:'100%'}} />
+                    )}
+                </div>
+                <div className="p-3 mt-4 mb-5">
+                    { last100Plot && (
+                        <img src={last100Plot} style={{maxWidth:'100%'}} />
                     )}
                 </div>
             </div>
