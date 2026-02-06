@@ -13,6 +13,7 @@ from datetime import datetime
 from .utils import save_plot
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import load_model
+from sklearn.metrics import mean_squared_error, r2_score
 
 
 class StockPredictionAPIView(APIView):
@@ -30,6 +31,7 @@ class StockPredictionAPIView(APIView):
                 return Response({ 'error' : 'No data found for the given ticker symbol.',
                                  'status': status.HTTP_404_NOT_FOUND
                                  })
+            
             df = df.reset_index()
             
             # Generate Basic Plot
@@ -118,21 +120,29 @@ class StockPredictionAPIView(APIView):
             plot_final_prediction = save_plot(plot_img_path)
             
             # closer view of last 100 days
-            plt.switch_backend('AGG')
-            plt.figure(figsize=(12,6))
-            plt.plot(y_test, 'b', label = 'Original Price')
-            plt.plot(y_predicted, 'r', label = 'Predicted price')
-            plt.title('comparision')
-            plt.xlabel('Days')
-            plt.ylabel("Closing price")
-            plt.legend()
-            plt.grid(True)
-            plt.xlim(650, 800)
-            plt.ylim(160,260)
-            last100_plot_img_path = f"{ticker}_final_prediction_last_100_days.png"
-            last100_plot_img = save_plot(last100_plot_img_path)
+            # plt.switch_backend('AGG')
+            # plt.figure(figsize=(12,6))
+            # plt.plot(y_test, 'b', label = 'Original Price')
+            # plt.plot(y_predicted, 'r', label = 'Predicted price')
+            # plt.title('comparision')
+            # plt.xlabel('Days')
+            # plt.ylabel("Closing price")
+            # plt.legend()
+            # plt.grid(True)
+            # plt.xlim(650, 800)
+            # plt.ylim(160,260)
+            # last100_plot_img_path = f"{ticker}_final_prediction_last_100_days.png"
+            # last100_plot_img = save_plot(last100_plot_img_path)
             
-            #Model Evolution
+            #Model Evaluation
+            #Mean squared error(MSE)
+            mse = mean_squared_error(y_test, y_predicted)
+            
+            # root mean squared error (rmse)
+            rmse = np.sqrt(mse)
+            
+            # r squared (r2)
+            r2 = r2_score(y_test, y_predicted)
             
             
             return Response({
@@ -141,6 +151,9 @@ class StockPredictionAPIView(APIView):
                 'ma100_plot_img': ma100_plot_img,
                 'ma200_plot_img': ma200_plot_img,
                 'plot_final_prediction': plot_final_prediction,
-                'plot_final_prediction_last_100_days': last100_plot_img,
+                #'plot_final_prediction_last_100_days': last100_plot_img,
+                'mse':mse,
+                'rmse':rmse,
+                'r2':r2,
                 })
             

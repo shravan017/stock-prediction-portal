@@ -12,7 +12,10 @@ const Dashboard = () => {
     const [ma100, setMa100] = useState()
     const [ma200, setMa200] = useState()
     const [finalPlot, setFinalPlot] = useState()
-    const [last100Plot, setLast100Plot] = useState()
+    //const [last100Plot, setLast100Plot] = useState()
+    const [mse, setMSE] = useState()
+    const [rmse, setRMSE] = useState()
+    const [r2, setR2] = useState()
 
     useEffect(() =>{
         const fetchProtectedData = async () =>{
@@ -40,17 +43,22 @@ const Dashboard = () => {
             const ma100URL = `${backendRoot}${response.data.ma100_plot_img}`
             const ma200URL = `${backendRoot}${response.data.ma200_plot_img}`
             const finalPlotURL = `${backendRoot}${response.data.plot_final_prediction}`
-            const last100PlotURL = `${backendRoot}${response.data.plot_final_prediction_last_100_days}`
+            //const last100PlotURL = `${backendRoot}${response.data.plot_final_prediction_last_100_days}`
             console.log('Plot URL:', plotURL)
             setPlot(plotURL)
             setMa100(ma100URL)
             setMa200(ma200URL)
             setFinalPlot(finalPlotURL)
-            setLast100Plot(last100PlotURL)
+            //setLast100Plot(last100PlotURL)
+            setMSE(response.data.mse)
+            setRMSE(response.data.rmse)
+            setR2(response.data.r2)
             
 
             if(response.data.error){
                 setError(response.data.error)
+            } else{
+                setError(false)
             }
         } catch(error){
             console.error('Error in API request',error)
@@ -76,34 +84,45 @@ const Dashboard = () => {
             </div>
 
             // Prediction Plot Display
-            <div className="prediction mt-5">
-                <div className="p-3">
-                    { plot && (
-                        <img src={plot} style={{maxWidth:'100%'}} />
-                        
-                    )}
+            {!error && finalPlot && (
+                
+                <div className="prediction mt-5">
+                    <div className="p-3">
+                        { plot && (
+                            <img src={plot} style={{maxWidth:'100%'}} />
+                            
+                        )}
+                    </div>
+                    <div className="p-3 mt-4">
+                        { ma100 && (
+                            <img src={ma100} style={{maxWidth:'100%'}} />
+                        )}
+                    </div>
+                    <div className="p-3 mt-4">
+                        { ma200 && (
+                            <img src={ma200} style={{maxWidth:'100%'}} />
+                        )}
+                    </div>
+                    <div className="p-3 mt-4">
+                        { finalPlot && (
+                            <img src={finalPlot} style={{maxWidth:'100%'}} />
+                        )}
+                    </div>
+                    {/* <div className="p-3 mt-4 mb-5">
+                        { last100Plot && (
+                            <img src={last100Plot} style={{maxWidth:'100%'}} />
+                        )}
+                    </div> */}
+                    <div className='p-3 mt-3 text-light'>
+                        <h3>MODEL EVALUATION</h3>
+                        <p>Mean Squared Error (MSE) : {mse}</p>
+                        <p>Root Mean Squared Error (RMSE) : {rmse}</p>
+                        <p>R Squared Error (R2-Score) : {r2}</p>
+                    </div>
                 </div>
-                <div className="p-3 mt-4">
-                    { ma100 && (
-                        <img src={ma100} style={{maxWidth:'100%'}} />
-                    )}
-                </div>
-                <div className="p-3 mt-4">
-                    { ma200 && (
-                        <img src={ma200} style={{maxWidth:'100%'}} />
-                    )}
-                </div>
-                <div className="p-3 mt-4">
-                    { finalPlot && (
-                        <img src={finalPlot} style={{maxWidth:'100%'}} />
-                    )}
-                </div>
-                <div className="p-3 mt-4 mb-5">
-                    { last100Plot && (
-                        <img src={last100Plot} style={{maxWidth:'100%'}} />
-                    )}
-                </div>
-            </div>
+
+            )}
+            
         
         </div>
     </div>
