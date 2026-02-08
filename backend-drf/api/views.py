@@ -12,9 +12,10 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from .utils import save_plot
 from sklearn.preprocessing import MinMaxScaler
-from keras.models import load_model
+#from keras.models import load_model
 from sklearn.metrics import mean_squared_error, r2_score
-
+# Load ML model 
+from .ml_model import model
 
 class StockPredictionAPIView(APIView):
     
@@ -85,8 +86,8 @@ class StockPredictionAPIView(APIView):
             #scaling data between 0 and 1
             scaler = MinMaxScaler(feature_range=(0, 1))
             
-            # Load ML model 
-            model = load_model('stock_predictor_model.keras')
+            
+            
             
             #preparing test data
             past_100_data = data_training.tail(100)
