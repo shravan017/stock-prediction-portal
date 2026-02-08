@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name : stock-prediction-backend
+    env : python
+    rootDir : backend-drf
+    buildCommand : pip install -r requirements.txt
+    startCommand : gunicorn stock_prediction_main.wsgi:application
+    pythonVersion : 3.10.13
