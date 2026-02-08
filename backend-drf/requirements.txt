@@ -21,7 +21,6 @@ kiwisolver==1.4.9
 markdown-it-py==4.0.0
 matplotlib==3.10.8
 mdurl==0.1.2
-ml_dtypes==0.5.4
 multitasking==0.0.12
 namex==0.1.0
 numpy<2
