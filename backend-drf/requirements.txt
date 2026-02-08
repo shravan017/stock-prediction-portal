@@ -30,7 +30,7 @@ pandas==3.0.0
 peewee==3.19.0
 pillow==12.1.0
 platformdirs==4.5.1
-protobuf==6.33.5
+
 pycparser==3.0
 Pygments==2.19.2
 PyJWT==2.10.1
@@ -50,7 +50,8 @@ typing_extensions==4.15.0
 tzdata==2025.3
 urllib3==2.6.3
 websockets==16.0
-yfinance==1.1.0
+yfinance
 tensorflow==2.15.0
+tensorflow-cpu==2.15.0
 gunicorn
 whitenoise
