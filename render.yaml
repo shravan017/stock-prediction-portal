@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: stock-prediction-portal
-    env: python
-    pythonVersion: 3.10.13
-    rootDir: backend-drf
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn stock_prediction_main.wsgi:application
-    
