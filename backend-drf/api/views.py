@@ -99,7 +99,8 @@ class StockPredictionAPIView(APIView):
             x_test, y_test = np.array(x_test), np.array(y_test)
             
             # making prediction
-            y_predicted = model.predict(x_test)
+            if model:
+                y_predicted = model.predict(x_test)
             
             #Inverse Transform(revert the scaled data into original data to see the difference)
             y_predicted = scaler.inverse_transform(y_predicted.reshape(-1, 1)).flatten()
