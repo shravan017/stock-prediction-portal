@@ -22,6 +22,6 @@
     
     # Hugging Face uses port 7860
     EXPOSE 7860
-    
+    ENV TF_USE_LEGACY_KERAS=1
     # Start the server using Gunicorn
     CMD ["gunicorn", "--bind", "0.0.0.0:7860", "stock_prediction_main.wsgi:application"]

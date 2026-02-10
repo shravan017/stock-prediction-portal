@@ -50,6 +50,8 @@ tzdata==2025.3
 urllib3==2.6.3
 websockets==16.0
 yfinance
+tensorflow==2.16.1
+tf-keras
 tensorflow-cpu==2.15.0
 gunicorn
 whitenoise
