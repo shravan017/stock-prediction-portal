@@ -51,7 +51,6 @@ urllib3==2.6.3
 websockets==16.0
 yfinance
 tensorflow==2.16.1
-tf-keras~=2.16
-tensorflow-cpu==2.15.0
+tf-keras
 gunicorn
 whitenoise
