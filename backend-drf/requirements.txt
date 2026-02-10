@@ -35,7 +35,7 @@ Pygments==2.19.2
 PyJWT==2.10.1
 pyparsing==3.3.2
 python-dateutil==2.9.0.post0
-python-decouple==3.8
+python-decouple
 pytz==2025.2
 requests==2.32.5
 rich==14.3.1
@@ -51,7 +51,7 @@ urllib3==2.6.3
 websockets==16.0
 yfinance
 tensorflow==2.16.1
-tf-keras
+tf-keras~=2.16
 tensorflow-cpu==2.15.0
 gunicorn
 whitenoise
