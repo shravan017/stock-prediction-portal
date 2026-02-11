@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Point the root URL to your React index.html
     
     #base API endpoint
     path('api/v1/', include('api.urls')),
