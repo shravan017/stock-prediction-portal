@@ -8,7 +8,7 @@ from django.conf import settings
 MODEL_PATH = os.path.join(settings.BASE_DIR, 'stock_predictor_model.keras')
 
 
-model = load_model(MODEL_PATH)
+#model = load_model(MODEL_PATH)
 # import os
 # import tf_keras as keras
 # from tf_keras.models import load_model
@@ -38,4 +38,16 @@ model = load_model(MODEL_PATH)
 #     model = None
 
 #model = load_model(MODEL_PATH)
+_model = None
+
+def get_model():
+    """Load model only when first needed"""
+    global _model
+    if _model is None:
+        try:
+            _model = load_model(MODEL_PATH)
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            _model = None  # Set to None if loading fails
+    return _model
 

@@ -14,7 +14,8 @@ from .utils import save_plot
 #from sklearn.preprocessing import MinMaxScaler
 #from keras.models import load_model
 from sklearn.metrics import mean_squared_error, r2_score
-from .ml_model import model
+#from .ml_model import model
+from .ml_model import get_model
 
 
 class StockPredictionAPIView(APIView):
@@ -102,6 +103,13 @@ class StockPredictionAPIView(APIView):
             
             # making prediction
             # if model:
+            #y_predicted = model.predict(x_test)
+            from .ml_model import get_model
+            # ... later ...
+            model = get_model()
+            if model is None:
+                return Response({"error": "Model not available"}, status=500)
+            
             y_predicted = model.predict(x_test)
             
             #Inverse Transform(revert the scaled data into original data to see the difference)
