@@ -1,1 +1,1 @@
-web: gunicorn stock_prediction_main.wsgi:application --bind 0.0.0.0:$PORT
+web: gunicorn stock_prediction_main.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --workers 1 --threads 2 --max-requests 50 --max-requests-jitter 10 --preload

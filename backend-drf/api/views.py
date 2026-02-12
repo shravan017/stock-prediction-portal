@@ -8,10 +8,10 @@ from rest_framework import status
 import yfinance as yf
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from datetime import datetime
 from .utils import save_plot
-from sklearn.preprocessing import MinMaxScaler
+#from sklearn.preprocessing import MinMaxScaler
 #from keras.models import load_model
 from sklearn.metrics import mean_squared_error, r2_score
 from .ml_model import model
@@ -36,6 +36,7 @@ class StockPredictionAPIView(APIView):
             df = df.reset_index()
             
             # Generate Basic Plot
+            import matplotlib.pyplot as plt
             plt.switch_backend('AGG') # Use a non-interactive backend (to save plots to files) AGG => Anti-Grain Geometry
             plt.figure(figsize=(12,5))
             plt.plot(df.Close, label = 'Closing Price')
@@ -84,6 +85,7 @@ class StockPredictionAPIView(APIView):
             data_testing = pd.DataFrame(df.Close[int(len(df)*0.7):int(len(df))])
             
             #scaling data between 0 and 1
+            from sklearn.preprocessing import MinMaxScaler
             scaler = MinMaxScaler(feature_range=(0, 1))
             
             
