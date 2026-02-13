@@ -99,10 +99,17 @@ pip install -r requirements.txt
 
 # Run server
 python manage.py runserver
+```
 
 # Purpose
 This project was built to strengthen backend API development skills and demonstrate integration of machine learning models into production-style web applications.
 
-#Author
+# Author
 Shravan Naik
 Python / Django Backend Developer
+
+## 📸 Screenshots
+
+### Home Page
+
+
